@@ -1,0 +1,44 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="decision-tree/decision-tree/DecisionBuilder.cs">
+    <Files>
+      <File FileName="decision-tree/Main.cs" Line="33" Column="39" />
+      <File FileName="decision-tree/decision-tree/Analyzer.cs" Line="82" Column="6" />
+      <File FileName="decision-tree/arff/Arff.cs" Line="18" Column="4" />
+      <File FileName="decision-tree/arff/ARFFReader.cs" Line="53" Column="33" />
+      <File FileName="decision-tree/arff/Attribute.cs" Line="14" Column="53" />
+      <File FileName="decision-tree/arff/Data.cs" Line="9" Column="13" />
+      <File FileName="decision-tree/arff/Relation.cs" Line="12" Column="4" />
+      <File FileName="decision-tree/arff/Value.cs" Line="10" Column="10" />
+      <File FileName="decision-tree/arff/StringValue.cs" Line="4" Column="2" />
+      <File FileName="decision-tree/arff/ParserException.cs" Line="3" Column="23" />
+      <File FileName="decision-tree/ExtensionMethods.cs" Line="27" Column="26" />
+      <File FileName="decision-tree/data/example.arff" Line="20" Column="17" />
+      <File FileName="decision-tree/decision-tree/Node.cs" Line="57" Column="56" />
+      <File FileName="decision-tree/decision-tree/Leaf.cs" Line="17" Column="4" />
+      <File FileName="decision-tree/decision-tree/DecisionBuilder.cs" Line="25" Column="21" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="decision-tree" expanded="True">
+            <Node name="arff" expanded="True" />
+            <Node name="data" expanded="True" />
+            <Node name="decision-tree" expanded="True">
+              <Node name="DecisionBuilder.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/home/bengt/code/lth/eda132-artificial-intelligence/decision-tree/decision-tree/decision-tree/DecisionBuilder.cs" line="25" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

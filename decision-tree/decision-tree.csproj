@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{242A4719-FB88-4B52-A928-FE9FE81532A5}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>decisiontree</RootNamespace>
+    <AssemblyName>decision-tree</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <Externalconsole>true</Externalconsole>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="Custom" name="Execute" command="bin/Debug/decision-tree.exe &quot;data/example.arff&quot;" />
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <Externalconsole>true</Externalconsole>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="decision-tree\Analyzer.cs" />
+    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="arff\Arff.cs" />
+    <Compile Include="arff\ARFFReader.cs" />
+    <Compile Include="arff\Attribute.cs" />
+    <Compile Include="arff\Data.cs" />
+    <Compile Include="arff\Relation.cs" />
+    <Compile Include="arff\StringValue.cs" />
+    <Compile Include="arff\Value.cs" />
+    <Compile Include="arff\ParserException.cs" />
+    <Compile Include="decision-tree\DecisionBuilder.cs" />
+    <Compile Include="decision-tree\Node.cs" />
+    <Compile Include="decision-tree\Leaf.cs" />
+    <Compile Include="Classifier.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="decision-tree\" />
+    <Folder Include="arff\" />
+    <Folder Include="data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data\example.arff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

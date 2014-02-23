@@ -1,0 +1,34 @@
+% 1. Title: Iris Plants Database
+% 
+% 2. Sources:
+%      (a) Creator: R.A. Fisher
+%      (b) Donor: Michael Marshall (MARSHALL%PLU@io.arc.nasa.gov)
+%      (c) Date: July, 1988
+% 
+@RELATION iris
+
+@ATTRIBUTE alternate        {true,false}
+@ATTRIBUTE bar              {true,false}
+@ATTRIBUTE fridaysaturday   {true,false}
+@ATTRIBUTE hungry           {true,false}
+@ATTRIBUTE patrons          {none,some,full}
+@ATTRIBUTE price            {$,$$,$$$}
+@ATTRIBUTE raining          {true,false}
+@ATTRIBUTE reservation      {true,false}
+@ATTRIBUTE type             {french, thai, burger, italian}
+@ATTRIBUTE waitestimate     {0-10,10-30,30-60,>60}
+@ATTRIBUTE class            {true,false}
+
+@DATA
+true ,false,false,true ,some,$$$,false,true ,french ,0-10 ,true
+true ,false,false,true ,full,$  ,false,false,thai   ,30-60,false
+false,true ,false,false,some,$  ,false,false,burger ,0-10 ,true
+true ,false,true ,true ,full,$  ,true ,false,thai   ,10-30,true
+true ,false,true ,false,full,$$$,false,true ,french ,>60  ,false
+false,true ,false,true ,some,$$ ,true ,true ,italian,0-10 ,true
+false,true ,false,false,none,$  ,true ,false,burger ,0-10 ,false
+false,false,false,true ,some,$$ ,true ,true ,thai   ,0-10 ,true
+false,true ,true ,false,full,$  ,true ,false,burger ,>60  ,false
+true ,true ,true ,true ,full,$$$,false,true ,italian,10-30,false
+false,false,false,false,none,$  ,false,false,thai   ,0-10 ,false
+true ,true ,true ,true ,full,$  ,false,false,burger ,30-60,true
