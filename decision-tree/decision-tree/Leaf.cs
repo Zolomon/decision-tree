@@ -6,17 +6,14 @@ namespace decisiontree
 {
 	public class Leaf : Node
 	{
-		Value decision {
-			get;
-			set;
-		}
+		Value decision { get; set; }
 
-		public Leaf (Value decision) 
+		public Leaf (Value decision)
 		{
 			this.decision = decision;
 		}
 
-		public override Value Choose(Data example) 
+		public override Value Choose (Data example)
 		{
 			return this.decision;
 		}
@@ -26,12 +23,12 @@ namespace decisiontree
 			return 1;
 		}
 
-		public override string Display(int depth) 
+		public override string Display (int depth)
 		{
-			return String.Format("{0}", decision.AsString());
+			return String.Format ("{0}", decision.AsString ());
 		}
 
-		public override bool IsLeaf() 
+		public override bool IsLeaf ()
 		{
 			return true;
 		}

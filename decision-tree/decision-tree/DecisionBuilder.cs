@@ -6,11 +6,15 @@ namespace decisiontree
 {
 	public class DecisionBuilder
 	{
+		// Binary classification => 2, at 5% degrees of freedom => 5.99;
+		// http://en.wikipedia.org/wiki/Chi-squared_distribution#Table_of_.CF.872_value_vs_p-value
+		const double SignificanceLevelAtTwoDegreesOfFreedom = 5.99;
+
 		private Arff arff { get; set; }
 
 		public DecisionBuilder (Arff arff)
 		{
-			this.arff=arff;
+			this.arff = arff;
 		}
 
 		public Node Build (List<Data> examples, List<Attribute> attributes, bool prune=false)
@@ -27,80 +31,79 @@ namespace decisiontree
 			} else if (attributes.Count == 0) {
 				return new Leaf (this.Plurality (examples));
 			} else {
-				var best = this.BestAttribute(examples, attributes);
+				var best = this.BestAttribute (examples, attributes);
 				var filtered_attributes = attributes.ToList ();
-				filtered_attributes.RemoveAll(x => x.Name == best.Name);
-				var tree = new Node(best);
-				var partitions = this.Partition(examples, best);
+				filtered_attributes.RemoveAll (x => x.Name == best.Name);
+				var tree = new Node (best);
+				var partitions = this.Partition (examples, best);
 				var values = best.Values;
 
 				foreach (var kvp in partitions) {
-					tree.AddChild(kvp.Key, this.Learn(kvp.Value, filtered_attributes, examples, prune));
-					if (values.Contains(kvp.Key)) {
-						values.Remove(kvp.Key);
+					tree.AddChild (kvp.Key, this.Learn (kvp.Value, filtered_attributes, examples, prune));
+					if (values.Contains (kvp.Key)) {
+						values.Remove (kvp.Key);
 					}
 				}
 
 				foreach (var value in values) {
-					tree.AddChild(value, new Leaf(this.Plurality(examples)));
+					tree.AddChild (value, new Leaf (this.Plurality (examples)));
+				}
+
+				if (prune && tree.IsEndNode ()) {
+					if (!this.IsSignificant (partitions, examples)) {
+						tree = new Leaf (this.Plurality (examples));
+					}
 				}
 
 				return tree;
 			}
 		}
 
-		private Dictionary<Value, List<Data>> Partition(List<Data> examples, Attribute best) 
+		private Dictionary<Value, List<Data>> Partition (List<Data> examples, Attribute best)
 		{
-			var partitions = new Dictionary<Value, List<Data>>();
+			var partitions = new Dictionary<Value, List<Data>> ();
 
 			foreach (var example in examples) {
-				var key = example.Values[best.Name];
-				if (partitions.ContainsKey(key)) {
-					partitions[key].Add (example);
+				var key = example.Values [best.Name];
+				if (partitions.ContainsKey (key)) {
+					partitions [key].Add (example);
 				} else {
-					partitions.Add (key, new List<Data>(){example});
+					partitions.Add (key, new List<Data> (){example});
 				}
 			}
 
 			return partitions;
 		}
 
-		private bool SameClassification(List<Data> examples) 
+		private bool SameClassification (List<Data> examples)
 		{
-			var byBool = examples.Select(x => x.Target.AsBool()).ToList();
-			var distinct = byBool.Distinct().ToList();
-			var skipFirst = distinct.Skip(1).ToList();
-			var any = skipFirst.Any ();
-
-			return !any;
-
-			//return examples.Select(x => x.Target.AsBool()).Distinct().Skip(1).Any ();
+			return !examples.Select (x => x.Target.AsBool ()).Distinct ().Skip (1).Any ();
 		}
 
-		private Value Plurality(List<Data> examples) 
+		private Value Plurality (List<Data> examples)
 		{
-			var high = examples[0].Target;
-			var counts = new Dictionary<Value, int>() { {high, 0}};
+			var high = examples [0].Target;
+			var counts = new Dictionary<Value, int> () { {high, 0}};
 			foreach (var item in examples) {
 				var label = item.Target;
-				if (counts.ContainsKey(label)) {
-					counts[label]++;
-					if (counts[label] > counts[high]) {
+				if (counts.ContainsKey (label)) {
+					counts [label]++;
+					if (counts [label] > counts [high]) {
 						high = label;
 					}
 				} else {
-					counts.Add(label, 0);
+					counts.Add (label, 0);
 				}
 			}
 			return high;
 		}
 
-		private Attribute BestAttribute(List<Data> examples, List<Attribute> attributes) 
+		private Attribute BestAttribute (List<Data> examples, List<Attribute> attributes)
 		{
-			var best = attributes[0];
-			var best_change = this.EntropyDifference(examples, best);
+			var best = attributes [0];
+			var best_change = this.EntropyDifference (examples, best);
 			foreach (var attribute in attributes) {
-				var change = this.EntropyDifference(examples, attribute);
+				var change = this.EntropyDifference (examples, attribute);
 				if (change > best_change) {
 					best = attribute;
 					best_change = change;
@@ -109,19 +112,19 @@ namespace decisiontree
 			return best;
 		}
 
-		private double EntropyDifference(List<Data> examples, Attribute attribute) 
+		private double EntropyDifference (List<Data> examples, Attribute attribute)
 		{
-			return this.Entropy (examples) - this.SplitEntropy(examples, attribute);
+			return this.Entropy (examples) - this.SplitEntropy (examples, attribute);
 		}
 
-		private double Entropy(List<Data> examples) 
+		private double Entropy (List<Data> examples)
 		{
-			var label_counts = new Dictionary<Value, int>();
+			var label_counts = new Dictionary<Value, int> ();
 			foreach (var example in examples) {
-				if (label_counts.ContainsKey(example.Target)) {
-					label_counts[example.Target]++;
+				if (label_counts.ContainsKey (example.Target)) {
+					label_counts [example.Target]++;
 				} else {
-					label_counts.Add(example.Target, 1);
+					label_counts.Add (example.Target, 1);
 				}
 			}
 			return this.Entropy (label_counts, examples.Count);
@@ -129,7 +132,7 @@ namespace decisiontree
 
 		private double SplitEntropy (List<Data> examples, Attribute attribute)
 		{
-			var partitions = this.Partition(examples, attribute);
+			var partitions = this.Partition (examples, attribute);
 			double entropy = 0;
 			foreach (var kvp in partitions) {
 				var splitentropy = this.Entropy (kvp.Value);
@@ -138,7 +141,7 @@ namespace decisiontree
 			return entropy;
 		}
 
-		private double Entropy(Dictionary<Value, int> label_counts, int total) 
+		private double Entropy (Dictionary<Value, int> label_counts, int total)
 		{
 			double entropy = 0;
 			double part = 0;
@@ -146,12 +149,41 @@ namespace decisiontree
 				var count = kvp.Value;
 				double rate = count / (double)total;
 				if (rate != 0) {
-					part = rate * Math.Log(rate, 2);
+					part = rate * Math.Log (rate, 2);
 				}
 				entropy += part;
 			}
-			// TODO: return entropy*-1? 
-			return part*-1;
+			return entropy * -1;
+		}
+
+		private bool IsSignificant (Dictionary<Value, List<Data>> partitions, List<Data> examples)
+		{
+			var split = this.SplitIntoPositiveNegative (examples);
+			var p = split.Item1;
+			var n = split.Item2;
+
+			var D = 0.0;
+			foreach (var i in partitions.Values) {
+				var spliti = this.SplitIntoPositiveNegative (i);
+				var pi = spliti.Item1;
+				var ni = spliti.Item2;
+
+				var rate = ((pi + ni) / (double)(p + n));
+				var pihat = p * rate;
+				var nihat = n * rate;
+				D += (Math.Pow (pi - pihat, 2) / pihat) + (Math.Pow (ni - nihat, 2) / nihat);
+			}
+
+			return D >= SignificanceLevelAtTwoDegreesOfFreedom;
+		}
+
+		private Tuple<int, int> SplitIntoPositiveNegative(List<Data> examples) 
+		{
+			var data = examples.GroupBy( x => x.Target).ToDictionary (g => g.Key.AsBool(), g => g.ToList ().Count ());
+			var pcount = data.Where(x => x.Key).First().Value;
+			var ncount = data.Where(x => !x.Key).First ().Value;
+
+			return new Tuple<int, int>(pcount, ncount);
 		}
 	}
 }

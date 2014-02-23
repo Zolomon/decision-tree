@@ -24,13 +24,13 @@ namespace decisiontree
 			} else if (item.ToLower ().Equals ("false")) {
 				return false;
 			} else {
-				throw new SystemException("Could not parse as bool value: " + item);
+				throw new SystemException ("Could not parse as bool value: " + item);
 			}
 		}
 
 		public override int GetHashCode ()
 		{
-			return item.GetHashCode();
+			return item.GetHashCode ();
 		}
 
 		public override bool Equals (object obj)
@@ -40,7 +40,7 @@ namespace decisiontree
 			}
 
 			Value v = (Value)obj;
-			return item.Equals(v.item);
+			return item.Equals (v.item);
 		}
 
 		public override string ToString ()

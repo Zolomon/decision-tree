@@ -44,7 +44,7 @@ namespace decisiontree
 			ARFFReader reader = new ARFFReader();
 			Arff arff = reader.Parse(new StreamReader(filename));
 
-			Classifier c = new Classifier(arff);
+			Classifier c = new Classifier(arff, true);
 			c.DrawTree();
 		}
 	}
