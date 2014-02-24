@@ -6,23 +6,23 @@ namespace decisiontree
 {
 	public class DecisionBuilder
 	{
+		private Arff arff { get; set; }
+
 		// Binary classification => 2, at 5% degrees of freedom => 5.99;
 		// http://en.wikipedia.org/wiki/Chi-squared_distribution#Table_of_.CF.872_value_vs_p-value
 		const double SignificanceLevelAtTwoDegreesOfFreedom = 5.99;
-
-		private Arff arff { get; set; }
 
 		public DecisionBuilder (Arff arff)
 		{
 			this.arff = arff;
 		}
 
-		public Node Build (List<Data> examples, List<Attribute> attributes, bool prune=false)
+		public Node BuildTree (List<Data> examples, List<Attribute> attributes, bool prune=false)
 		{
-			return this.Learn (examples, arff.Attributes, examples, prune);
+			return this.DecisionTreeLearner (examples, arff.Attributes, examples, prune);
 		}
 
-		private Node Learn (List<Data> examples, List<Attribute> attributes, List<Data> parent_examples, bool prune=false)
+		private Node DecisionTreeLearner (List<Data> examples, List<Attribute> attributes, List<Data> parent_examples, bool prune=false)
 		{
 			if (examples.Count == 0) {
 				return new Leaf (this.Plurality (parent_examples));
@@ -31,15 +31,17 @@ namespace decisiontree
 			} else if (attributes.Count == 0) {
 				return new Leaf (this.Plurality (examples));
 			} else {
-				var best = this.BestAttribute (examples, attributes);
+				var mostImportantAttribute = this.Importance (examples, attributes);
+
 				var filtered_attributes = attributes.ToList ();
-				filtered_attributes.RemoveAll (x => x.Name == best.Name);
-				var tree = new Node (best);
-				var partitions = this.Partition (examples, best);
-				var values = best.Values;
+				filtered_attributes.RemoveAll (x => x.Name == mostImportantAttribute.Name);
+
+				var tree = new Node (mostImportantAttribute);
+				var partitions = this.Partition (examples, mostImportantAttribute);
+				var values = mostImportantAttribute.Values;
 
 				foreach (var kvp in partitions) {
-					tree.AddChild (kvp.Key, this.Learn (kvp.Value, filtered_attributes, examples, prune));
+					tree.AddChild (kvp.Key, this.DecisionTreeLearner (kvp.Value, filtered_attributes, examples, prune));
 					if (values.Contains (kvp.Key)) {
 						values.Remove (kvp.Key);
 					}
@@ -49,10 +51,8 @@ namespace decisiontree
 					tree.AddChild (value, new Leaf (this.Plurality (examples)));
 				}
 
-				if (prune && tree.IsEndNode ()) {
-					if (!this.IsSignificant (partitions, examples)) {
-						tree = new Leaf (this.Plurality (examples));
-					}
+				if (prune && tree.IsEndNode () && !this.IsSignificant (partitions, examples)) {
+					tree = new Leaf (this.Plurality (examples));
 				}
 
 				return tree;
@@ -98,7 +98,7 @@ namespace decisiontree
 			return high;
 		}
 
-		private Attribute BestAttribute (List<Data> examples, List<Attribute> attributes)
+		private Attribute Importance (List<Data> examples, List<Attribute> attributes)
 		{
 			var best = attributes [0];
 			var best_change = this.EntropyDifference (examples, best);
@@ -153,7 +153,7 @@ namespace decisiontree
 				}
 				entropy += part;
 			}
-			return entropy * -1;
+			return part * -1;
 		}
 
 		private bool IsSignificant (Dictionary<Value, List<Data>> partitions, List<Data> examples)
@@ -171,19 +171,19 @@ namespace decisiontree
 				var rate = ((pi + ni) / (double)(p + n));
 				var pihat = p * rate;
 				var nihat = n * rate;
+
 				D += (Math.Pow (pi - pihat, 2) / pihat) + (Math.Pow (ni - nihat, 2) / nihat);
 			}
 
 			return D >= SignificanceLevelAtTwoDegreesOfFreedom;
 		}
 
-		private Tuple<int, int> SplitIntoPositiveNegative(List<Data> examples) 
+		private Tuple<int, int> SplitIntoPositiveNegative (List<Data> examples)
 		{
-			var data = examples.GroupBy( x => x.Target).ToDictionary (g => g.Key.AsBool(), g => g.ToList ().Count ());
-			var pcount = data.Where(x => x.Key).First().Value;
-			var ncount = data.Where(x => !x.Key).First ().Value;
-
-			return new Tuple<int, int>(pcount, ncount);
+			var data = examples.GroupBy (x => x.Target).ToDictionary (g => g.Key.AsBool (), g => g.ToList ().Count ());
+			var pcount = data.Count > 0 && data.Any (x => x.Key) ? data.Where (x => x.Key).First ().Value : 0;
+			var ncount = data.Count > 0 && data.Any (x => !x.Key) ? data.Where (x => !x.Key).First ().Value : 0;
+			return new Tuple<int, int> (pcount, ncount);
 		}
 	}
 }
