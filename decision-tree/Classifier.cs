@@ -24,7 +24,7 @@ namespace decisiontree
 
 		public static void Main (string[] args)
 		{
-			if (args.Length > 2) {
+			if (args.Length > 2 || args.Length == 0) {
 				Console.WriteLine ("Bad usage. Use:\t./decision-tree.exe <arff file> \t[prune]");
 				Console.WriteLine ("Example: \t./decision-tree.exe data/example.arff \tprune");
 				Environment.Exit (1);
