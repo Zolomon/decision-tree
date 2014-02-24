@@ -18,7 +18,7 @@ namespace decisiontree
 
 		public void DrawTree ()
 		{
-			var tree = builder.BuildTree (arff.Data, arff.Attributes, true);
+			var tree = builder.BuildTree (arff.Data, arff.Attributes, this.prune);
 			Console.WriteLine(tree.Display(0));
 		}
 
