@@ -48,7 +48,7 @@ namespace decisiontree
 
 			Console.WriteLine ("File: \t\t{0}\nPruning: \t{1}", filename, prune);
 
-			ARFFReader reader = new ARFFReader();
+			ArffReader reader = new ArffReader();
 			Arff arff = reader.Parse(new StreamReader(filename));
 
 			Classifier c = new Classifier(arff, prune);

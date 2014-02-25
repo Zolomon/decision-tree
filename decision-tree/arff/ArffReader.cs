@@ -6,13 +6,13 @@ using System.Collections.Generic;
 
 namespace decisiontree
 {
-	public class ARFFReader
+	public class ArffReader
 	{
 		private Regex relation = new Regex (@"^@(?i)RELATION(?-i)\s+(?<name>.*?)$");
 		private Regex attribute = new Regex (@"^@(?i)ATTRIBUTE(?-i)\s+(?<name>.*?)\s+{(?<values>(.+))}$");
 		private Regex data = new Regex (@"^@(?i)DATA(?-i)$");
 
-		public ARFFReader ()
+		public ArffReader ()
 		{
 
 		}

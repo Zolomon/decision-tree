@@ -43,7 +43,6 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="arff\Arff.cs" />
-    <Compile Include="arff\ARFFReader.cs" />
     <Compile Include="arff\Attribute.cs" />
     <Compile Include="arff\Data.cs" />
     <Compile Include="arff\Relation.cs" />
@@ -54,6 +53,7 @@
     <Compile Include="decision-tree\Node.cs" />
     <Compile Include="decision-tree\Leaf.cs" />
     <Compile Include="Classifier.cs" />
+    <Compile Include="arff\ArffReader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

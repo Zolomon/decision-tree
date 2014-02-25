@@ -162,7 +162,7 @@ namespace decisiontree
 			var p = split.Item1;
 			var n = split.Item2;
 
-			var D = 0.0;
+			var delta = 0.0;
 			foreach (var i in partitions.Values) {
 				var spliti = this.SplitIntoPositiveNegative (i);
 				var pi = spliti.Item1;
@@ -172,10 +172,10 @@ namespace decisiontree
 				var pihat = p * rate;
 				var nihat = n * rate;
 
-				D += (Math.Pow (pi - pihat, 2) / pihat) + (Math.Pow (ni - nihat, 2) / nihat);
+				delta += (Math.Pow (pi - pihat, 2) / pihat) + (Math.Pow (ni - nihat, 2) / nihat);
 			}
 
-			return D >= SignificanceLevelAtTwoDegreesOfFreedom;
+			return delta >= SignificanceLevelAtTwoDegreesOfFreedom;
 		}
 
 		private Tuple<int, int> SplitIntoPositiveNegative (List<Data> examples)
